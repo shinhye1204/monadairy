@@ -172,10 +172,12 @@ export async function GET(req: NextRequest) {
   }
 
   const lowerOwner = owner.toLowerCase() as `0x${string}`;
+  const filterEntries = Array.from(contractFilters.entries());
+
   try {
     const ownedAssets: NFTAsset[] = [];
 
-    for (const [contractAddress, tokenOverrides] of contractFilters.entries()) {
+    for (const [contractAddress, tokenOverrides] of filterEntries) {
       const checksumAddress = contractAddress as `0x${string}`;
       const normalizedContract = contractAddress.toLowerCase();
 
