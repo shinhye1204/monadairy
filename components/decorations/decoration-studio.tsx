@@ -252,7 +252,11 @@ const stageScaleStyle = useMemo(
   const loadImage = useCallback(
     (src: string) =>
       new Promise<HTMLImageElement>((resolve, reject) => {
-        const img = new Image();
+        if (typeof window === "undefined") {
+          reject(new Error("이미지 로더는 클라이언트에서만 동작합니다."));
+          return;
+        }
+        const img = new window.Image();
         img.crossOrigin = "anonymous";
         img.onload = () => resolve(img);
         img.onerror = () => reject(new Error("이미지를 불러오지 못했습니다."));
