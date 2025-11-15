@@ -12,7 +12,13 @@ function truncateAddress(address?: string | null) {
 
 export function ConnectPanel() {
   const { address, status } = useAccount();
-  const { connect, connectors, isPending, variables } = useConnect();
+  const {
+    connect,
+    connectors,
+    status: connectStatus,
+    pendingConnector,
+    variables
+  } = useConnect();
   const { disconnect } = useDisconnect();
 
   const isConnected = status === "connected" && !!address;
@@ -21,7 +27,8 @@ export function ConnectPanel() {
     ["metaMask", "phantom"].includes(connector.id)
   );
 
-  const pendingId = variables?.connector?.id;
+  const pendingId = pendingConnector?.id ?? variables?.connector?.id;
+  const isConnecting = connectStatus === "loading";
 
   return (
     <PixelCard title="지갑 연결" className="connect-card">
@@ -54,7 +61,7 @@ export function ConnectPanel() {
               variant={connector.id === "metaMask" ? "pink" : "purple"}
               block
               disabled={!connector.ready}
-              loading={isPending && pendingId === connector.id}
+              loading={isConnecting && pendingId === connector.id}
               onClick={() =>
                 connect({
                   connector,
